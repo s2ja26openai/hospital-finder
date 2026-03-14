@@ -19,22 +19,22 @@
       <!-- 반경 필터 -->
       <div class="filter-row">
         <span class="filter-label">반경</span>
-        <button class="radius-btn active" data-radius="500" onclick="setRadius(this)">500m</button>
-        <button class="radius-btn" data-radius="1000" onclick="setRadius(this)">1km</button>
-        <button class="radius-btn" data-radius="5000" onclick="setRadius(this)">5km</button>
-        <button class="radius-btn" data-radius="10000" onclick="setRadius(this)">10km</button>
+        <button class="radius-btn active" data-radius="500" onclick="setRadius(this)" aria-label="반경 500미터">500m</button>
+        <button class="radius-btn" data-radius="1000" onclick="setRadius(this)" aria-label="반경 1킬로미터">1km</button>
+        <button class="radius-btn" data-radius="5000" onclick="setRadius(this)" aria-label="반경 5킬로미터">5km</button>
+        <button class="radius-btn" data-radius="10000" onclick="setRadius(this)" aria-label="반경 10킬로미터">10km</button>
 
         <!-- 정렬 -->
-        <div class="sort-toggle">
-          <button class="sort-btn active" data-sort="score" onclick="setSort(this)">평점순</button>
-          <button class="sort-btn" data-sort="distance" onclick="setSort(this)">거리순</button>
+        <div class="sort-toggle" role="group" aria-label="정렬 기준">
+          <button class="sort-btn active" data-sort="score" onclick="setSort(this)" aria-label="평점순 정렬">평점순</button>
+          <button class="sort-btn" data-sort="distance" onclick="setSort(this)" aria-label="거리순 정렬">거리순</button>
         </div>
       </div>
 
       <div id="listSummary" style="font-size:13px;color:var(--color-text-sub);"></div>
     </div>
 
-    <div id="hospitalList"></div>
+    <div id="hospitalList" role="list" aria-label="병원 목록"></div>
   </div>
 
   <!-- 지도 패널 -->

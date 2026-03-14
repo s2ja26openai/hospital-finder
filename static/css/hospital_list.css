@@ -104,6 +104,13 @@
 .status-closed { background: #ffeef0; color: var(--color-closed); }
 
 .card-review { font-size: 12px; color: var(--color-text-sub); margin-bottom: 4px; }
+.list-state {
+  padding: 48px 24px;
+  text-align: center;
+  color: var(--color-text-sub);
+  line-height: 1.8;
+}
+.list-state-error { color: #c0392b; }
 .card-review-meta { font-size: 11px; color: var(--color-text-sub); }
 .badge-low-trust {
   display: inline-block;

@@ -33,7 +33,7 @@ async function loadHospitals() {
 
   const list = document.getElementById('hospitalList');
   const summary = document.getElementById('listSummary');
-  list.innerHTML = '<div style="padding:40px;text-align:center;color:var(--color-text-sub);">불러오는 중...</div>';
+  list.innerHTML = '<div class="list-state" role="status" aria-live="polite">불러오는 중...</div>';
 
   const params = new URLSearchParams({
     lat, lng,
@@ -51,7 +51,7 @@ async function loadHospitals() {
     renderHospitalList(hospitals);
     updateMapMarkers(hospitals);
   } catch (e) {
-    list.innerHTML = '<div style="padding:40px;text-align:center;color:var(--color-text-sub);">병원 정보를 불러오지 못했습니다.</div>';
+    list.innerHTML = '<div class="list-state list-state-error" role="alert" aria-live="assertive">병원 정보를 불러오지 못했습니다.<br><small>잠시 후 다시 시도해 주세요.</small></div>';
   }
 }
 
@@ -60,7 +60,7 @@ function renderHospitalList(hospitals) {
   list.innerHTML = '';
 
   if (hospitals.length === 0) {
-    list.innerHTML = '<div style="padding:40px;text-align:center;color:var(--color-text-sub);">해당 반경 내 병원이 없습니다.</div>';
+    list.innerHTML = '<div class="list-state" role="status">해당 반경 내 병원이 없습니다.<br><small>반경을 넓혀보세요.</small></div>';
     return;
   }
 
@@ -68,6 +68,8 @@ function renderHospitalList(hospitals) {
     const card = document.createElement('div');
     card.className = 'hospital-card';
     card.dataset.id = h.id;
+    card.setAttribute('role', 'listitem');
+    card.setAttribute('aria-label', `${h.name}, ${distLabel}, ${h.statusText}`);
     const distLabel = h.distance >= 1000 ? (h.distance / 1000).toFixed(1) + 'km' : h.distance + 'm';
     card.innerHTML = `
       <div class="card-header">
