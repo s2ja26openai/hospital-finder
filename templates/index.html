@@ -1,6 +1,38 @@
 {% extends "base.html" %}
+{% block title %}내 주변 병원 찾기{% endblock %}
+{% block extra_css %}
+<link rel="stylesheet" href="/static/css/index.css">
+{% endblock %}
+
 {% block content %}
-<div class="container" style="padding-top:40px;">
-  <h1>메인 페이지</h1>
+<div class="container">
+  <section class="hero">
+    <h1 class="hero-title">내 주변 병원 찾기</h1>
+    <p class="hero-subtitle">증상을 입력하거나 진료과를 선택해 주변 병원을 찾아보세요</p>
+
+    <!-- 증상으로 찾기 -->
+    <div class="symptom-section">
+      <div class="symptom-input-wrap">
+        <input
+          type="text"
+          id="symptomInput"
+          class="symptom-input"
+          placeholder="증상을 입력하세요 (예: 머리가 아파요)"
+          aria-label="증상 입력"
+        >
+        <button class="btn btn-primary" onclick="goToChatbot()">증상으로 찾기</button>
+      </div>
+    </div>
+
+    <!-- 진료과로 찾기 -->
+    <div class="dept-section">
+      <div class="dept-section-title">또는 진료과를 직접 선택하세요</div>
+      <div class="dept-grid" id="deptGrid"></div>
+    </div>
+  </section>
 </div>
+{% endblock %}
+
+{% block scripts %}
+<script src="/static/js/index.js"></script>
 {% endblock %}
