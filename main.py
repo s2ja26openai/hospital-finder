@@ -10,7 +10,9 @@ app = FastAPI(title="내 주변 병원 찾기")
 app.mount("/static", StaticFiles(directory="static"), name="static")
 templates = Jinja2Templates(directory="templates")
 
-KAKAO_JS_API_KEY = os.getenv("KAKAO_JS_API_KEY", "")
+KAKAO_JS_API_KEY = os.getenv("KAKAO_JS_API_KEY", "") or os.getenv("KAKO_JS_API_KEY", "")
+KAKAO_MAP_API_KEY = os.getenv("KAKAO_MAP_API_KEY", "")
+HIRA_API_KEY = os.getenv("HIRA_API_KEY", "")
 
 
 @app.get("/")
