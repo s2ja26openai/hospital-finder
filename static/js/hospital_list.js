@@ -76,7 +76,8 @@ function renderHospitalList(hospitals) {
       </div>
       <div class="card-depts">${h.departments.join(' · ')}</div>
       <span class="card-status ${statusClass(h.status)}">${h.statusText}</span>
-      <div class="card-review">${h.reviewSummary || ''}</div>
+      ${h.reviewSummary ? `<div class="card-review">${h.reviewSummary}</div>` : ''}
+      ${h.reviewCount > 0 ? `<div class="card-review-meta">리뷰 ${h.reviewCount}개 · 점수 ${h.score > 0 ? '+' : ''}${h.score}${!h.reliable ? ' <span class="badge-low-trust">신뢰도 낮음</span>' : ''}</div>` : ''}
     `;
     card.onclick = () => openDetail(h);
     list.appendChild(card);

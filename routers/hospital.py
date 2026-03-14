@@ -1,9 +1,14 @@
 # routers/hospital.py
+import asyncio
 from fastapi import APIRouter, Query
 from services.kakao_hospital_service import search_hospitals
 from services.hospital_service import enrich_hospitals
+from services.naver_crawler import get_reviews
+from services.scoring_service import extract_points
 
 router = APIRouter(prefix="/api")
+
+_STATUS_ORDER = {"open": 0, "upcoming": 1, "closed": 2, "unknown": 3}
 
 
 @router.get("/hospitals")
@@ -17,7 +22,30 @@ async def hospitals_api(
     raw = await search_hospitals(lat, lng, radius, department)
     enriched = enrich_hospitals(raw)
 
-    if sort == "distance":
+    # 리뷰 수집 및 점수 산출 (병렬)
+    async def _score(h):
+        try:
+            reviews = await get_reviews(h["name"])
+            result = extract_points(reviews)
+            h["score"] = result["score"]
+            h["reviewSummary"] = result["summary"]
+            h["reviewCount"] = result["total"]
+            h["reliable"] = result["reliable"]
+        except Exception:
+            pass
+        return h
+
+    enriched = await asyncio.gather(*[_score(h) for h in enriched])
+    enriched = list(enriched)
+
+    if sort == "score":
+        # 평점순: 신뢰도 낮은 병원은 하단, 그 안에서 점수 내림차순
+        enriched.sort(key=lambda x: (
+            0 if x.get("reliable", False) else 1,
+            -x.get("score", 0),
+            _STATUS_ORDER.get(x.get("status", "unknown"), 3),
+        ))
+    elif sort == "distance":
         enriched.sort(key=lambda x: x.get("distance", 0))
 
     return {"hospitals": enriched, "total": len(enriched)}
