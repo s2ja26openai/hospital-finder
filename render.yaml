@@ -1,0 +1,13 @@
+services:
+  - type: web
+    name: hospital-finder
+    runtime: python
+    buildCommand: pip install -r requirements.txt
+    startCommand: uvicorn main:app --host 0.0.0.0 --port $PORT
+    envVars:
+      - key: KAKAO_JS_API_KEY
+        sync: false
+      - key: KAKAO_MAP_API_KEY
+        sync: false
+      - key: ANTHROPIC_API_KEY
+        sync: false

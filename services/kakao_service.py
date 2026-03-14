@@ -2,8 +2,12 @@
 import httpx
 import math
 import os
+import sys
 
 KAKAO_MAP_API_KEY = os.getenv("KAKAO_MAP_API_KEY", "")
+
+# Windows 개발환경에서만 SSL 검증 비활성화
+_SSL_VERIFY = sys.platform != "win32"
 
 
 def _headers() -> dict:
@@ -13,7 +17,7 @@ def _headers() -> dict:
 async def address_to_coords(address: str) -> dict | None:
     """주소 문자열 → {"lat": float, "lng": float} 또는 None"""
     url = "https://dapi.kakao.com/v2/local/search/address.json"
-    async with httpx.AsyncClient(verify=False) as client:
+    async with httpx.AsyncClient(verify=_SSL_VERIFY) as client:
         r = await client.get(url, headers=_headers(), params={"query": address})
         r.raise_for_status()
         docs = r.json().get("documents", [])
@@ -26,7 +30,7 @@ async def address_to_coords(address: str) -> dict | None:
 async def keyword_to_coords(keyword: str) -> dict | None:
     """키워드 검색 → 좌표 (주소 검색 fallback)"""
     url = "https://dapi.kakao.com/v2/local/search/keyword.json"
-    async with httpx.AsyncClient(verify=False) as client:
+    async with httpx.AsyncClient(verify=_SSL_VERIFY) as client:
         r = await client.get(url, headers=_headers(), params={"query": keyword})
         r.raise_for_status()
         docs = r.json().get("documents", [])
@@ -39,7 +43,7 @@ async def keyword_to_coords(keyword: str) -> dict | None:
 async def coords_to_region(lat: float, lng: float) -> dict:
     """좌표 → {"sido_cd": str, "sido_name": str, "sggu_name": str}"""
     url = "https://dapi.kakao.com/v2/local/geo/coord2regioncode.json"
-    async with httpx.AsyncClient(verify=False) as client:
+    async with httpx.AsyncClient(verify=_SSL_VERIFY) as client:
         r = await client.get(url, headers=_headers(), params={"x": lng, "y": lat})
         r.raise_for_status()
         docs = r.json().get("documents", [])

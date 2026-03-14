@@ -2,9 +2,12 @@
 # 카카오 로컬 API 기반 병원 검색 (HIRA 대체)
 import httpx
 import os
+import sys
 
 KAKAO_MAP_API_KEY = os.getenv("KAKAO_MAP_API_KEY", "")
 CATEGORY_URL = "https://dapi.kakao.com/v2/local/search/category.json"
+
+_SSL_VERIFY = sys.platform != "win32"
 KEYWORD_URL  = "https://dapi.kakao.com/v2/local/search/keyword.json"
 
 
@@ -27,7 +30,7 @@ async def search_hospitals(lat: float, lng: float, radius: int, department: str 
 async def _category_search(lat: float, lng: float, radius: int) -> list[dict]:
     """카테고리 HP8(병원) 반경 검색 — 최대 45개 × 3페이지"""
     results = []
-    async with httpx.AsyncClient(verify=False) as client:
+    async with httpx.AsyncClient(verify=_SSL_VERIFY) as client:
         for page in range(1, 4):
             params = {
                 "category_group_code": "HP8",
@@ -51,7 +54,7 @@ async def _category_search(lat: float, lng: float, radius: int) -> list[dict]:
 async def _keyword_search(lat: float, lng: float, radius: int, department: str) -> list[dict]:
     """키워드 "{진료과}" 반경 검색"""
     results = []
-    async with httpx.AsyncClient(verify=False) as client:
+    async with httpx.AsyncClient(verify=_SSL_VERIFY) as client:
         for page in range(1, 4):
             params = {
                 "query": department,

@@ -1,7 +1,10 @@
 # services/naver_crawler.py
 """네이버 Place 리뷰 크롤러 — httpx 기반 (Playwright 불필요)."""
 import httpx
+import sys
 import time
+
+_SSL_VERIFY = sys.platform != "win32"
 
 _HEADERS = {
     "User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 "
@@ -19,7 +22,7 @@ async def search_place_id(hospital_name: str) -> str | None:
     url = "https://map.naver.com/p/api/search/allSearch"
     params = {"query": hospital_name, "type": "place", "searchCoord": "", "boundary": ""}
     try:
-        async with httpx.AsyncClient(verify=False, timeout=10) as client:
+        async with httpx.AsyncClient(verify=_SSL_VERIFY, timeout=10) as client:
             resp = await client.get(url, params=params, headers=_HEADERS)
             resp.raise_for_status()
             data = resp.json()
@@ -38,7 +41,7 @@ async def fetch_reviews(place_id: str, max_count: int = 50) -> list[str]:
     size = 50
     url = f"https://m.place.naver.com/rest/place/{place_id}/review/ugc"
     try:
-        async with httpx.AsyncClient(verify=False, timeout=10) as client:
+        async with httpx.AsyncClient(verify=_SSL_VERIFY, timeout=10) as client:
             while len(reviews) < max_count:
                 params = {"page": page, "size": size, "sort": "recent"}
                 resp = await client.get(url, params=params, headers=_HEADERS)
