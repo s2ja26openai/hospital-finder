@@ -20,9 +20,16 @@ jobs:
       - name: Install dependencies
         run: pip install -r requirements-dev.txt
 
-      - name: Run tests
+      - name: Run tests with coverage
         env:
           KAKAO_JS_API_KEY: ""
           KAKAO_MAP_API_KEY: ""
           ANTHROPIC_API_KEY: ""
-        run: pytest --tb=short -v
+        run: pytest --tb=short -v --cov=services --cov=routers --cov-report=term-missing
+
+      - name: Check coverage threshold
+        env:
+          KAKAO_JS_API_KEY: ""
+          KAKAO_MAP_API_KEY: ""
+          ANTHROPIC_API_KEY: ""
+        run: pytest --cov=services --cov=routers --cov-fail-under=50 -q
