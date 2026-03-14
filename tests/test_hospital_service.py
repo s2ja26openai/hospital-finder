@@ -119,7 +119,10 @@ class TestEnrichHospitals:
             self._make_hospital("3", "운영중병원", {today: "00:00-23:59"}, 300),
         ]
         result = enrich_hospitals(hospitals)
-        assert result[-1]["name"] == "휴무병원"
+        # _STATUS_ORDER: open=0, upcoming=1, closed=2, unknown=3
+        # 정렬: 운영중(open) → 휴무(closed) → 알수없음(unknown)
+        assert result[0]["name"] == "운영중병원"
+        assert result[-1]["name"] == "알수없음병원"
 
     def test_score_initialized_to_zero(self):
         hospitals = [self._make_hospital("1", "병원", {})]

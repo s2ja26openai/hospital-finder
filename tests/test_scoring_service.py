@@ -124,7 +124,8 @@ class TestExtractPoints:
         assert len(result["top_negative"]) <= 3
 
     def test_score_zero_when_equal(self):
-        reviews = ["친절해요", "불친절해요"]
+        # "최악이에요" → negative, "추천합니다" → positive → score=0
+        reviews = ["최악이에요", "추천합니다"]
         result = extract_points(reviews)
         assert result["score"] == 0
 
