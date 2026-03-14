@@ -40,8 +40,8 @@
 | **Frontend** | Jinja2 Templates + Vanilla JS | 단일 서버 통합 운용 요건 충족. SPA 프레임워크 불필요 (Simplicity First) |
 | **지도** | 카카오맵 JavaScript SDK | 국내 지도/Geocoding API 지원, 무료 할당량 충분 |
 | **AI 추론** | Claude API | PRD 지정. 증상→진료과 추론 + 리뷰 요약 |
-| **병원 데이터** | 건강보험심사평가원 API (공공데이터포털) | PRD 지정. 공인 데이터, 무료 |
-| **리뷰 데이터** | 네이버 지도 크롤링 (Playwright) | 공식 리뷰 API 미제공 |
+| **병원 데이터** | 카카오 로컬 API (HP8 카테고리) | 좌표 기반 반경 검색 지원, 무료 할당량 충분 |
+| **리뷰 데이터** | 네이버 지도 크롤링 (httpx) | 공식 리뷰 API 미제공. Render 환경 호환성을 위해 Playwright 대신 httpx 사용 |
 | **배포** | Render (Web Service) | PRD 지정 |
 | **CSS** | 자체 CSS (반응형) | 카드 UI + 지도 레이아웃만 필요. 외부 프레임워크 도입은 과도 |
 
