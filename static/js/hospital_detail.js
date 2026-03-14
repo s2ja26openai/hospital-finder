@@ -3,7 +3,7 @@ const DAY_NAMES = { mon:'월', tue:'화', wed:'수', thu:'목', fri:'금', sat:'
 const TODAY_KEY = ['sun','mon','tue','wed','thu','fri','sat'][new Date().getDay()];
 
 function statusClass(status) {
-  return { open: 'status-open', upcoming: 'status-upcoming', closed: 'status-closed' }[status];
+  return { open: 'status-open', upcoming: 'status-upcoming', closed: 'status-closed', unknown: 'status-closed' }[status] || 'status-closed';
 }
 
 function buildHoursTable(hours) {
@@ -43,7 +43,7 @@ function renderDetail(h) {
     </div>
     <div class="detail-info-row" style="flex-direction:column;">
       <span class="detail-info-label" style="margin-bottom:4px;">운영시간</span>
-      ${buildHoursTable(h.hours)}
+      ${h.hours && Object.keys(h.hours).length > 0 ? buildHoursTable(h.hours) : '<span style="color:var(--color-text-sub);font-size:13px;">운영시간 정보 없음</span>'}
     </div>
 
     <div class="nav-buttons">
@@ -65,12 +65,15 @@ function initDetailMap(hospital) {
 }
 
 document.addEventListener('DOMContentLoaded', () => {
-  const hospital = window.MOCK_HOSPITALS.find(h => h.id === HOSPITAL_ID);
+  const raw = sessionStorage.getItem('selectedHospital');
+  const hospital = raw ? JSON.parse(raw) : null;
+
   if (!hospital) {
     document.getElementById('detailContent').innerHTML =
-      '<div style="color:var(--color-closed);">병원 정보를 찾을 수 없습니다.</div>';
+      '<div style="color:var(--color-closed);">병원 정보를 찾을 수 없습니다. 목록으로 돌아가 다시 선택해 주세요.</div>';
     return;
   }
+
   renderDetail(hospital);
 
   if (KAKAO_JS_API_KEY) {

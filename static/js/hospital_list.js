@@ -8,70 +8,79 @@ function setRadius(btn) {
   document.querySelectorAll('.radius-btn').forEach(b => b.classList.remove('active'));
   btn.classList.add('active');
   currentRadius = parseInt(btn.dataset.radius);
-  renderList();
+  loadHospitals();
 }
 
 function setSort(btn) {
   document.querySelectorAll('.sort-btn').forEach(b => b.classList.remove('active'));
   btn.classList.add('active');
   currentSort = btn.dataset.sort;
-  renderList();
-}
-
-function filterAndSort(hospitals) {
-  let filtered = hospitals.filter(h => h.distance <= currentRadius);
-  if (SELECTED_DEPARTMENT) {
-    filtered = filtered.filter(h => h.departments.includes(SELECTED_DEPARTMENT));
-  }
-  if (currentSort === 'score') {
-    filtered.sort((a, b) => {
-      const statusOrder = { open: 0, upcoming: 1, closed: 2 };
-      if (statusOrder[a.status] !== statusOrder[b.status]) {
-        return statusOrder[a.status] - statusOrder[b.status];
-      }
-      return b.score - a.score;
-    });
-  } else {
-    filtered.sort((a, b) => a.distance - b.distance);
-  }
-  return filtered;
+  loadHospitals();
 }
 
 function statusClass(status) {
-  return { open: 'status-open', upcoming: 'status-upcoming', closed: 'status-closed' }[status];
+  return {
+    open: 'status-open',
+    upcoming: 'status-upcoming',
+    closed: 'status-closed',
+    unknown: 'status-closed',
+  }[status] || 'status-closed';
 }
 
-function renderList() {
+async function loadHospitals() {
+  const { lat, lng } = window.LocationState;
+  if (!lat || !lng) return;
+
   const list = document.getElementById('hospitalList');
   const summary = document.getElementById('listSummary');
-  const filtered = filterAndSort(window.MOCK_HOSPITALS);
+  list.innerHTML = '<div style="padding:40px;text-align:center;color:var(--color-text-sub);">불러오는 중...</div>';
 
-  summary.textContent = `${filtered.length}개 병원`;
+  const params = new URLSearchParams({
+    lat, lng,
+    radius: currentRadius,
+    department: SELECTED_DEPARTMENT || '',
+    sort: currentSort,
+  });
+
+  try {
+    const res = await fetch(`/api/hospitals?${params}`);
+    const data = await res.json();
+    const hospitals = data.hospitals || [];
+
+    summary.textContent = `${data.total}개 병원`;
+    renderHospitalList(hospitals);
+    updateMapMarkers(hospitals);
+  } catch (e) {
+    list.innerHTML = '<div style="padding:40px;text-align:center;color:var(--color-text-sub);">병원 정보를 불러오지 못했습니다.</div>';
+  }
+}
+
+function renderHospitalList(hospitals) {
+  const list = document.getElementById('hospitalList');
   list.innerHTML = '';
 
-  if (filtered.length === 0) {
+  if (hospitals.length === 0) {
     list.innerHTML = '<div style="padding:40px;text-align:center;color:var(--color-text-sub);">해당 반경 내 병원이 없습니다.</div>';
     return;
   }
 
-  filtered.forEach(h => {
+  hospitals.forEach(h => {
     const card = document.createElement('div');
     card.className = 'hospital-card';
     card.dataset.id = h.id;
+    const distLabel = h.distance >= 1000 ? (h.distance / 1000).toFixed(1) + 'km' : h.distance + 'm';
     card.innerHTML = `
       <div class="card-header">
         <span class="card-name">${h.name}</span>
-        <span class="card-distance">${h.distance >= 1000 ? (h.distance/1000).toFixed(1)+'km' : h.distance+'m'}</span>
+        <span class="card-distance">${distLabel}</span>
       </div>
       <div class="card-depts">${h.departments.join(' · ')}</div>
       <span class="card-status ${statusClass(h.status)}">${h.statusText}</span>
-      <div class="card-review">${h.reviewSummary}</div>
+      <div class="card-review">${h.reviewSummary || ''}</div>
     `;
     card.onclick = () => openDetail(h);
     list.appendChild(card);
   });
-
-  updateMapMarkers(filtered);
 }
 
 function openDetail(hospital) {
@@ -79,12 +88,14 @@ function openDetail(hospital) {
   const card = document.querySelector(`.hospital-card[data-id="${hospital.id}"]`);
   if (card) card.classList.add('selected');
 
+  // 상세 페이지에서 사용할 병원 데이터를 sessionStorage에 저장
+  sessionStorage.setItem('selectedHospital', JSON.stringify(hospital));
+
   if (kakaoMap) {
-    const pos = new kakao.maps.LatLng(hospital.lat, hospital.lng);
-    kakaoMap.setCenter(pos);
+    kakaoMap.setCenter(new kakao.maps.LatLng(hospital.lat, hospital.lng));
   }
 
-  window.location.href = `/hospitals/${hospital.id}`;
+  window.location.href = `/hospitals/${encodeURIComponent(hospital.id)}`;
 }
 
 function initMap() {
@@ -96,7 +107,7 @@ function initMap() {
       center: new kakao.maps.LatLng(lat, lng),
       level: 4
     });
-    renderList();
+    loadHospitals();
   });
 }
 
@@ -115,12 +126,12 @@ function updateMapMarkers(hospitals) {
   });
 }
 
-window.onLocationSet = () => renderList();
+window.onLocationSet = () => loadHospitals();
 
 document.addEventListener('DOMContentLoaded', () => {
   if (KAKAO_JS_API_KEY && KAKAO_JS_API_KEY !== '') {
     initMap();
   } else {
-    renderList();
+    loadHospitals();
   }
 });

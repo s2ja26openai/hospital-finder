@@ -39,17 +39,31 @@ function requestGPS() {
   );
 }
 
-function confirmAddress() {
+async function confirmAddress() {
   const val = document.getElementById('addressInput').value.trim();
   if (!val) return;
-  // Phase 1: Mock 좌표 사용 (Phase 2에서 Geocoding API로 교체)
-  window.LocationState.lat = 37.5665;
-  window.LocationState.lng = 126.9780;
-  window.LocationState.label = val;
-  window.LocationState.isSet = true;
-  updateLocationBar();
-  hideLocationModal();
-  if (typeof onLocationSet === 'function') onLocationSet();
+
+  try {
+    const res = await fetch('/api/geocode', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ address: val }),
+    });
+    const data = await res.json();
+    if (data.error || !data.lat) {
+      alert('주소를 찾을 수 없습니다. 다시 입력해 주세요.');
+      return;
+    }
+    window.LocationState.lat = data.lat;
+    window.LocationState.lng = data.lng;
+    window.LocationState.label = val;
+    window.LocationState.isSet = true;
+    updateLocationBar();
+    hideLocationModal();
+    if (typeof onLocationSet === 'function') onLocationSet();
+  } catch (e) {
+    alert('위치 설정 중 오류가 발생했습니다.');
+  }
 }
 
 function updateLocationBar() {
