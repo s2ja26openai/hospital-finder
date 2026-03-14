@@ -1,0 +1,26 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>{% block title %}내 주변 병원 찾기{% endblock %}</title>
+  <link rel="stylesheet" href="/static/css/base.css">
+  {% block extra_css %}{% endblock %}
+</head>
+<body>
+  <header class="header">
+    <div class="container header-inner">
+      <a href="/" class="header-logo">내 주변 병원 찾기</a>
+      <nav>
+        <a href="/" class="btn btn-outline" style="padding:6px 14px;font-size:13px;">홈</a>
+      </nav>
+    </div>
+  </header>
+
+  <main>
+    {% block content %}{% endblock %}
+  </main>
+
+  {% block scripts %}{% endblock %}
+</body>
+</html>
