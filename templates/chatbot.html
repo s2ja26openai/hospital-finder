@@ -1,1 +1,31 @@
-<!DOCTYPE html><html><body><p>챗봇 준비 중</p></body></html>
+{% extends "base.html" %}
+{% block title %}증상 챗봇 — 내 주변 병원 찾기{% endblock %}
+{% block extra_css %}
+<link rel="stylesheet" href="/static/css/chatbot.css">
+{% endblock %}
+
+{% block content %}
+<div class="container">
+  <div class="chat-layout">
+    <div class="chat-messages" id="chatMessages">
+      <div class="bubble bubble-bot">
+        안녕하세요! 증상을 알려주시면 적합한 진료과를 추천해 드릴게요.
+      </div>
+    </div>
+    <div class="chat-input-area">
+      <input
+        type="text"
+        id="chatInput"
+        class="chat-input"
+        placeholder="증상을 입력하세요..."
+        aria-label="증상 입력"
+      >
+      <button class="btn btn-primary" onclick="sendMessage()">전송</button>
+    </div>
+  </div>
+</div>
+{% endblock %}
+
+{% block scripts %}
+<script src="/static/js/chatbot.js"></script>
+{% endblock %}
