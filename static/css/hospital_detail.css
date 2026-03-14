@@ -73,13 +73,6 @@
 .hours-table td:first-child { color: var(--color-text-sub); width: 40px; }
 .hours-table tr.today td { font-weight: 700; color: var(--color-primary); }
 
-/* 길 안내 버튼 영역 */
-.nav-buttons {
-  margin-top: 20px;
-  display: flex;
-  gap: 8px;
-}
-
 @media (max-width: 768px) {
   .detail-layout { grid-template-columns: 1fr; }
   .detail-map { height: 220px; }

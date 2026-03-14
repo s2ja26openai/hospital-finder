@@ -19,13 +19,6 @@ function buildHoursTable(hours) {
   `;
 }
 
-function buildNavUrl(platform, lat, lng, name) {
-  if (platform === 'kakao') {
-    return `kakaomap://route?ep=${lat},${lng}&by=FOOT`;
-  }
-  return `nmap://route/walk?dlat=${lat}&dlng=${lng}&dname=${encodeURIComponent(name)}&appname=hospital-finder`;
-}
-
 function renderDetail(h) {
   const content = document.getElementById('detailContent');
   content.innerHTML = `
@@ -44,13 +37,6 @@ function renderDetail(h) {
     <div class="detail-info-row" style="flex-direction:column;">
       <span class="detail-info-label" style="margin-bottom:4px;">운영시간</span>
       ${h.hours && Object.keys(h.hours).length > 0 ? buildHoursTable(h.hours) : '<span style="color:var(--color-text-sub);font-size:13px;">운영시간 정보 없음</span>'}
-    </div>
-
-    <div class="nav-buttons">
-      <a href="${buildNavUrl('kakao', h.lat, h.lng, h.name)}"
-         class="btn btn-primary" target="_blank">카카오맵 길 안내</a>
-      <a href="${buildNavUrl('naver', h.lat, h.lng, h.name)}"
-         class="btn btn-outline" target="_blank">네이버 지도</a>
     </div>
   `;
 }

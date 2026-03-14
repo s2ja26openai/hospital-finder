@@ -31,7 +31,7 @@ Browser (Jinja2 + Vanilla JS + Kakao Maps SDK)
 FastAPI Server
     ├── routers/chatbot.py    → services/claude_service.py   → Claude API (symptom→department)
     ├── routers/hospital.py   → services/hira_service.py     → 건강보험심사평가원 API (hospital data)
-    │                         → services/kakao_service.py    → Kakao Maps API (geocoding, walking routes)
+    │                         → services/kakao_service.py    → Kakao Maps API (geocoding)
     ├── routers/review.py     → services/naver_crawler.py    → Naver Maps (Playwright crawling for reviews)
     │                         → services/claude_service.py   → Claude API (review summarization)
     └── routers/location.py   → services/kakao_service.py    → Kakao Maps Geocoding
@@ -44,7 +44,7 @@ FastAPI Server
 ## Key Design Decisions
 
 - **Jinja2 + Vanilla JS over SPA**: PRD requires single-server deployment; no build pipeline needed
-- **Kakao Maps over Naver Maps**: Kakao provides clear walking route API; reviews are separately crawled from Naver
+- **Kakao Maps over Naver Maps**: Kakao provides geocoding and map SDK; reviews are separately crawled from Naver
 - **Frontend-first approach**: Build UI with mock data first → user review → then backend integration
 - **Responsive**: Mobile (375px) / Tablet (768px) / PC (1440px)
 
@@ -52,7 +52,7 @@ FastAPI Server
 
 Managed via `.env` file (see `.env.example`):
 - `CLAUDE_API_KEY` — Symptom analysis + review summarization
-- `KAKAO_MAP_API_KEY` — Geocoding + walking routes
+- `KAKAO_MAP_API_KEY` — Geocoding + hospital search
 - `HIRA_API_KEY` — 건강보험심사평가원 (public hospital data)
 
 ## Development Methodology
