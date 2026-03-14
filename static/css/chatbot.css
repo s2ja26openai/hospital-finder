@@ -118,3 +118,16 @@
 }
 
 .chat-input:focus { border-color: var(--color-primary); }
+
+/* 모바일 입력창 고정 */
+@media (max-width: 480px) {
+  .chat-layout {
+    height: calc(100vh - 60px);
+  }
+  .chat-input-area {
+    position: sticky;
+    bottom: 0;
+    background: var(--color-bg);
+    padding-bottom: env(safe-area-inset-bottom, 12px);
+  }
+}

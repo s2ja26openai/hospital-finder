@@ -1,0 +1,87 @@
+/* static/css/hospital_detail.css */
+.detail-layout {
+  display: grid;
+  grid-template-columns: 1fr 400px;
+  gap: 0;
+  height: calc(100vh - 60px);
+}
+
+.detail-map { position: relative; }
+#detailMap { width: 100%; height: 100%; }
+
+.detail-panel {
+  overflow-y: auto;
+  padding: 24px 20px;
+  border-left: 1px solid var(--color-border);
+}
+
+.detail-back {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  font-size: 14px;
+  color: var(--color-primary);
+  text-decoration: none;
+  margin-bottom: 16px;
+}
+
+.detail-name {
+  font-size: 22px;
+  font-weight: 800;
+  margin-bottom: 4px;
+}
+
+.detail-depts {
+  font-size: 14px;
+  color: var(--color-text-sub);
+  margin-bottom: 12px;
+}
+
+.detail-status {
+  display: inline-block;
+  padding: 4px 10px;
+  border-radius: 12px;
+  font-size: 13px;
+  font-weight: 600;
+  margin-bottom: 16px;
+}
+
+.detail-info-row {
+  display: flex;
+  gap: 8px;
+  align-items: flex-start;
+  padding: 10px 0;
+  border-bottom: 1px solid var(--color-border);
+  font-size: 14px;
+}
+
+.detail-info-label {
+  width: 64px;
+  color: var(--color-text-sub);
+  flex-shrink: 0;
+}
+
+/* 운영시간 표 */
+.hours-table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 13px;
+  margin-top: 12px;
+}
+
+.hours-table td { padding: 5px 0; }
+.hours-table td:first-child { color: var(--color-text-sub); width: 40px; }
+.hours-table tr.today td { font-weight: 700; color: var(--color-primary); }
+
+/* 길 안내 버튼 영역 */
+.nav-buttons {
+  margin-top: 20px;
+  display: flex;
+  gap: 8px;
+}
+
+@media (max-width: 768px) {
+  .detail-layout { grid-template-columns: 1fr; }
+  .detail-map { height: 220px; }
+  .detail-panel { border-left: none; border-top: 1px solid var(--color-border); }
+}

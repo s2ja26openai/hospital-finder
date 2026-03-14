@@ -1,0 +1,79 @@
+// static/js/hospital_detail.js
+const DAY_NAMES = { mon:'월', tue:'화', wed:'수', thu:'목', fri:'금', sat:'토', sun:'일' };
+const TODAY_KEY = ['sun','mon','tue','wed','thu','fri','sat'][new Date().getDay()];
+
+function statusClass(status) {
+  return { open: 'status-open', upcoming: 'status-upcoming', closed: 'status-closed' }[status];
+}
+
+function buildHoursTable(hours) {
+  return `
+    <table class="hours-table">
+      ${Object.entries(hours).map(([key, val]) => `
+        <tr class="${key === TODAY_KEY ? 'today' : ''}">
+          <td>${DAY_NAMES[key]}</td>
+          <td>${val}</td>
+        </tr>
+      `).join('')}
+    </table>
+  `;
+}
+
+function buildNavUrl(platform, lat, lng, name) {
+  if (platform === 'kakao') {
+    return `kakaomap://route?ep=${lat},${lng}&by=FOOT`;
+  }
+  return `nmap://route/walk?dlat=${lat}&dlng=${lng}&dname=${encodeURIComponent(name)}&appname=hospital-finder`;
+}
+
+function renderDetail(h) {
+  const content = document.getElementById('detailContent');
+  content.innerHTML = `
+    <div class="detail-name">${h.name}</div>
+    <div class="detail-depts">${h.departments.join(' · ')}</div>
+    <span class="detail-status ${statusClass(h.status)}">${h.statusText}</span>
+
+    <div class="detail-info-row">
+      <span class="detail-info-label">주소</span>
+      <span>${h.address}</span>
+    </div>
+    <div class="detail-info-row">
+      <span class="detail-info-label">전화</span>
+      <a href="tel:${h.phone}">${h.phone}</a>
+    </div>
+    <div class="detail-info-row" style="flex-direction:column;">
+      <span class="detail-info-label" style="margin-bottom:4px;">운영시간</span>
+      ${buildHoursTable(h.hours)}
+    </div>
+
+    <div class="nav-buttons">
+      <a href="${buildNavUrl('kakao', h.lat, h.lng, h.name)}"
+         class="btn btn-primary" target="_blank">카카오맵 길 안내</a>
+      <a href="${buildNavUrl('naver', h.lat, h.lng, h.name)}"
+         class="btn btn-outline" target="_blank">네이버 지도</a>
+    </div>
+  `;
+}
+
+function initDetailMap(hospital) {
+  kakao.maps.load(() => {
+    const container = document.getElementById('detailMap');
+    const pos = new kakao.maps.LatLng(hospital.lat, hospital.lng);
+    const map = new kakao.maps.Map(container, { center: pos, level: 3 });
+    new kakao.maps.Marker({ map, position: pos, title: hospital.name });
+  });
+}
+
+document.addEventListener('DOMContentLoaded', () => {
+  const hospital = window.MOCK_HOSPITALS.find(h => h.id === HOSPITAL_ID);
+  if (!hospital) {
+    document.getElementById('detailContent').innerHTML =
+      '<div style="color:var(--color-closed);">병원 정보를 찾을 수 없습니다.</div>';
+    return;
+  }
+  renderDetail(hospital);
+
+  if (KAKAO_JS_API_KEY) {
+    initDetailMap(hospital);
+  }
+});
