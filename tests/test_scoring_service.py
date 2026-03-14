@@ -1,5 +1,4 @@
 """services/scoring_service.py 단위 테스트"""
-import pytest
 from services.scoring_service import analyze_sentiment, extract_points
 
 

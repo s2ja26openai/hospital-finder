@@ -1,6 +1,5 @@
 """FastAPI 통합 테스트 — httpx.AsyncClient 사용"""
 import pytest
-import pytest_asyncio
 from httpx import AsyncClient, ASGITransport
 from unittest.mock import patch, AsyncMock
 from main import app

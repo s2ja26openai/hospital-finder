@@ -1,6 +1,5 @@
 # services/hospital_service.py
 from datetime import datetime
-from services.kakao_service import haversine
 
 _PY_TO_DAY = {0: "mon", 1: "tue", 2: "wed", 3: "thu", 4: "fri", 5: "sat", 6: "sun"}
 _STATUS_ORDER = {"open": 0, "upcoming": 1, "closed": 2, "unknown": 3}

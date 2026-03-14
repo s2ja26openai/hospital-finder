@@ -1,5 +1,24 @@
 # Sprint 2 — 병원 데이터 & 위치 백엔드 구현 계획
 
+## ✅ 완료 기록 (2026-03-13)
+
+| 항목 | 상태 | 비고 |
+|------|------|------|
+| 카카오 REST API 키 발급 | ✅ 완료 | KAKAO_MAP_API_KEY 환경 변수 설정 |
+| 카카오 로컬 API 연동 | ✅ 완료 | kakao_hospital_service.py (HP8 카테고리 검색) |
+| Geocoding 서비스 구현 | ✅ 완료 | kakao_service.py — 주소/키워드 → 좌표 |
+| 반경 기반 병원 필터링 | ✅ 완료 | Haversine 공식 적용, 500m~10km |
+| 운영 상태 판별 로직 | ✅ 완료 | hospital_service.py — open/upcoming/closed/unknown |
+| 진료과 필터링 | ✅ 완료 | 카카오 카테고리명 파싱으로 진료과 추출 |
+| 프론트엔드 API 연동 | ✅ 완료 | Mock 데이터 → 실제 API 응답으로 교체 |
+| 병원 목록 API 엔드포인트 | ✅ 완료 | GET /api/hospitals |
+| 위치 설정 API 엔드포인트 | ✅ 완료 | POST /api/geocode |
+
+**주요 결정:** HIRA API → 카카오 로컬 API로 전환 (좌표 기반 반경 검색 직접 지원)
+**완료 커밋:** `a32fc39`, `0aa1730`, `5a2cd92`
+
+---
+
 > **For Claude:** REQUIRED SUB-SKILL: Use superpowers:executing-plans to implement this plan task-by-task.
 
 **Goal:** 실제 공공 API 데이터(건강보험심사평가원 + 카카오맵)로 병원 목록을 조회하고, 위치(GPS/주소) + 진료과 + 반경 필터링이 동작하는 상태를 만든다.

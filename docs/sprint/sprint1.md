@@ -1,5 +1,24 @@
 # Sprint 1 — 프론트엔드 프로토타입 구현 계획
 
+## ✅ 완료 기록 (2026-03-13)
+
+| 항목 | 상태 | 비고 |
+|------|------|------|
+| FastAPI 프로젝트 구조 생성 | ✅ 완료 | main.py, routers/, templates/, static/, .env.example |
+| Jinja2 base.html 레이아웃 | ✅ 완료 | 공통 헤더/푸터, CSS 변수 시스템 |
+| 반응형 CSS 기본 구조 | ✅ 완료 | 375px/768px/1440px 미디어 쿼리 |
+| 메인 페이지 진입 UI | ✅ 완료 | 증상 입력창 + 진료과 선택 버튼 |
+| 챗봇 UI (Mock) | ✅ 완료 | 사용자/봇 말풍선, 진료과 추천 카드 |
+| 위치 설정 UI | ✅ 완료 | GPS 위치 획득 + 주소 입력 fallback |
+| 병원 목록 UI (Mock) | ✅ 완료 | 카드 컴포넌트, 반경/정렬 필터 |
+| 카카오맵 SDK 연동 | ✅ 완료 | 지도 + 병원 핀 마커 표시 |
+| 병원 상세 UI | ✅ 완료 | 전화번호, 주소, 운영시간 표시 |
+| 반응형 최종 검증 | ✅ 완료 | 3개 뷰포트 레이아웃 정상 확인 |
+
+**완료 커밋:** `9c3571a`, `3ef90c7`, `0df77a7`
+
+---
+
 > **For Claude:** REQUIRED SUB-SKILL: Use superpowers:executing-plans to implement this plan task-by-task.
 
 **Goal:** FastAPI 프로젝트를 초기 설정하고, Mock 데이터 기반으로 전체 UI 플로우(메인/챗봇/위치설정/병원목록/지도+상세)를 완성하여 사용자 검토를 받는다.

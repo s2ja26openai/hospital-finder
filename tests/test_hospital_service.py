@@ -1,6 +1,4 @@
 """services/hospital_service.py 단위 테스트"""
-import pytest
-from unittest.mock import patch
 from datetime import datetime
 from services.hospital_service import get_status, enrich_hospitals, _PY_TO_DAY
 

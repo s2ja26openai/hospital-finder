@@ -24,7 +24,7 @@ async def global_exception_handler(request: Request, exc: Exception):
 app.mount("/static", StaticFiles(directory="static"), name="static")
 templates = Jinja2Templates(directory="templates")
 
-from routers import location, hospital, chatbot as chatbot_router, review
+from routers import location, hospital, chatbot as chatbot_router, review  # noqa: E402
 app.include_router(location.router)
 app.include_router(hospital.router)
 app.include_router(chatbot_router.router)

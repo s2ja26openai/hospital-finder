@@ -1,5 +1,21 @@
 # Sprint 3 — 챗봇 구현 계획
 
+## ✅ 완료 기록 (2026-03-13)
+
+| 항목 | 상태 | 비고 |
+|------|------|------|
+| Claude API 서비스 구현 | ✅ 완료 | claude_service.py — 증상→진료과 추론 |
+| 챗봇 API 엔드포인트 | ✅ 완료 | POST /api/chat |
+| 멀티턴 세션 관리 | ✅ 완료 | 서버 메모리 dict 기반 대화 히스토리 |
+| 진료과 추천 프롬프트 | ✅ 완료 | 진료과명 + 추천 근거(질병 가능성) 반환 |
+| 챗봇 프론트엔드 연동 | ✅ 완료 | Mock 응답 제거, 실제 /api/chat 연동 |
+| 로딩 인디케이터 | ✅ 완료 | typing dots 애니메이션 |
+| 길 안내 기능 제거 | ✅ 완료 | PRD 범위 외 기능으로 제외 결정 |
+
+**완료 커밋:** `736b424`
+
+---
+
 > **For Claude:** REQUIRED SUB-SKILL: Use superpowers:executing-plans to implement this plan task-by-task.
 
 **Goal:** Claude API 기반 증상→진료과 추천 챗봇을 완성한다.

@@ -25,7 +25,7 @@ async def chat(body: ChatRequest):
 
     try:
         result = await recommend_departments(history)
-    except Exception as e:
+    except Exception:
         return {
             "session_id": session_id,
             "departments": [],
