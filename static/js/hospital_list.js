@@ -132,7 +132,7 @@ function updateMapMarkers(hospitals) {
 window.onLocationSet = () => loadHospitals();
 
 document.addEventListener('DOMContentLoaded', () => {
-  if (KAKAO_JS_API_KEY && KAKAO_JS_API_KEY !== '') {
+  if (KAKAO_JS_API_KEY && KAKAO_JS_API_KEY !== '' && typeof kakao !== 'undefined') {
     initMap();
   } else {
     loadHospitals();
