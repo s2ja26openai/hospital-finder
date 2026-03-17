@@ -11,3 +11,9 @@ services:
         sync: false
       - key: ANTHROPIC_API_KEY
         sync: false
+      - key: USE_GROQ
+        value: "true"
+      - key: GROQ_API_KEY
+        sync: false
+      - key: GROQ_MODEL
+        value: "gemma2-9b-it"

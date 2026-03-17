@@ -41,5 +41,5 @@ async def chat(body: ChatRequest):
     return {
         "session_id": session_id,
         "departments": result.get("departments", []),
-        "message": result.get("message", "증상을 분석했습니다."),
+        "message": "증상을 분석했습니다. 아래 진료과를 추천드려요:",
     }
