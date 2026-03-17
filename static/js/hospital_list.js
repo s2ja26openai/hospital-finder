@@ -69,8 +69,8 @@ function renderHospitalList(hospitals) {
     card.className = 'hospital-card';
     card.dataset.id = h.id;
     card.setAttribute('role', 'listitem');
-    card.setAttribute('aria-label', `${h.name}, ${distLabel}, ${h.statusText}`);
     const distLabel = h.distance >= 1000 ? (h.distance / 1000).toFixed(1) + 'km' : h.distance + 'm';
+    card.setAttribute('aria-label', `${h.name}, ${distLabel}, ${h.statusText}`);
     card.innerHTML = `
       <div class="card-header">
         <span class="card-name">${h.name}</span>
