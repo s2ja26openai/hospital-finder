@@ -1,6 +1,5 @@
 # services/kakao_hospital_service.py
 # 카카오 로컬 API 기반 병원 검색 (HIRA 대체)
-import asyncio
 import httpx
 import os
 import sys
@@ -10,12 +9,6 @@ CATEGORY_URL = "https://dapi.kakao.com/v2/local/search/category.json"
 
 _SSL_VERIFY = sys.platform != "win32"
 KEYWORD_URL  = "https://dapi.kakao.com/v2/local/search/keyword.json"
-PLACE_DETAIL_URL = "https://place.map.kakao.com/main/v/{id}"
-
-_DAY_MAP = {
-    "월요일": "mon", "화요일": "tue", "수요일": "wed",
-    "목요일": "thu", "금요일": "fri", "토요일": "sat", "일요일": "sun",
-}
 
 
 def _headers() -> dict:
@@ -30,49 +23,8 @@ async def search_hospitals(lat: float, lng: float, radius: int, department: str 
     반환: [{"id", "name", "address", "phone", "lat", "lng", "departments", "distance", "hours"}, ...]
     """
     if department:
-        results = await _keyword_search(lat, lng, radius, department)
-    else:
-        results = await _category_search(lat, lng, radius)
-    await _enrich_hours(results)
-    return results
-
-
-async def _enrich_hours(hospitals: list[dict]) -> None:
-    """병원 목록의 운영시간을 카카오 Place 상세 API로 병렬 조회 (in-place)"""
-    async with httpx.AsyncClient(verify=_SSL_VERIFY, timeout=5) as client:
-        tasks = [_fetch_hours(client, h["id"]) for h in hospitals]
-        hours_list = await asyncio.gather(*tasks, return_exceptions=True)
-    for h, hours in zip(hospitals, hours_list):
-        if isinstance(hours, dict):
-            h["hours"] = hours
-
-
-async def _fetch_hours(client: httpx.AsyncClient, place_id: str) -> dict:
-    """카카오 Place 상세 API로 운영시간 조회"""
-    try:
-        r = await client.get(PLACE_DETAIL_URL.format(id=place_id))
-        if r.status_code != 200:
-            return {}
-        open_hour = r.json().get("basicInfo", {}).get("openHour", {})
-        return _parse_kakao_hours(open_hour)
-    except Exception:
-        return {}
-
-
-def _parse_kakao_hours(open_hour: dict) -> dict:
-    """카카오 openHour → {"mon": "09:00-18:00", ...}"""
-    hours: dict[str, str] = {}
-    for period in open_hour.get("periodList", []):
-        for t in period.get("timeList", []):
-            day_key = _DAY_MAP.get(t.get("timeName", ""))
-            time_se = t.get("timeSE", "")  # "09:00~18:00"
-            if day_key and "~" in time_se:
-                hours[day_key] = time_se.replace("~", "-")
-    for offday in open_hour.get("offdayList", []):
-        day_key = _DAY_MAP.get(offday.get("holidayName", ""))
-        if day_key:
-            hours[day_key] = "휴무"
-    return hours
+        return await _keyword_search(lat, lng, radius, department)
+    return await _category_search(lat, lng, radius)
 
 
 async def _category_search(lat: float, lng: float, radius: int) -> list[dict]:
@@ -140,7 +92,7 @@ def _parse_doc(doc: dict) -> dict:
         "lng":         float(doc.get("x", 0)),
         "departments": dept,
         "distance":    dist,
-        "hours":       {},
+        "hours":       {},   # 카카오 로컬 API는 운영시간 미제공
     }
 
 
