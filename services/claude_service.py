@@ -2,8 +2,11 @@
 import json
 import logging
 import os
+import sys
 import httpx
 from anthropic import AsyncAnthropic
+
+_SSL_VERIFY = sys.platform != "win32"
 
 logger = logging.getLogger(__name__)
 
@@ -12,7 +15,7 @@ _OLLAMA_URL = os.getenv("OLLAMA_URL", "http://localhost:11434")
 _OLLAMA_MODEL = os.getenv("OLLAMA_MODEL", "llama3.2")
 _USE_GROQ = os.getenv("USE_GROQ", "false").lower() == "true"
 _GROQ_API_KEY = os.getenv("GROQ_API_KEY", "")
-_GROQ_MODEL = os.getenv("GROQ_MODEL", "gemma2-9b-it")
+_GROQ_MODEL = os.getenv("GROQ_MODEL", "llama-3.1-8b-instant")
 _client = AsyncAnthropic(api_key=os.getenv("ANTHROPIC_API_KEY", ""))
 
 SYSTEM_PROMPT = """You are a Korean medical assistant. Recommend medical departments based on user symptoms.
@@ -63,7 +66,7 @@ async def _recommend_via_ollama(messages: list[dict]) -> dict:
 
 async def _recommend_via_groq(messages: list[dict]) -> dict:
     groq_messages = [{"role": "system", "content": SYSTEM_PROMPT}] + messages
-    async with httpx.AsyncClient(timeout=60) as client:
+    async with httpx.AsyncClient(timeout=60, verify=_SSL_VERIFY) as client:
         res = await client.post(
             "https://api.groq.com/openai/v1/chat/completions",
             headers={"Authorization": f"Bearer {_GROQ_API_KEY}"},
