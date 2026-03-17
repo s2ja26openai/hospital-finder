@@ -1,9 +1,12 @@
 # routers/chatbot.py
 import json
+import logging
 import uuid
 from fastapi import APIRouter
 from pydantic import BaseModel
 from services.claude_service import recommend_departments
+
+logger = logging.getLogger(__name__)
 
 router = APIRouter(prefix="/api")
 
@@ -25,7 +28,8 @@ async def chat(body: ChatRequest):
 
     try:
         result = await recommend_departments(history)
-    except Exception:
+    except Exception as e:
+        logger.error("recommend_departments failed: %s", e, exc_info=True)
         return {
             "session_id": session_id,
             "departments": [],
